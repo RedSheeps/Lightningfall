@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="Lightningfall.App.View.BacklogItems"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Lightningfall.App.View"
+             xmlns:ig="http://infragistics.com/DataPresenter"
+             xmlns:viewModel="clr-namespace:Lightningfall.App.ViewModel"
+             xmlns:dockManager="http://infragistics.com/DockManager"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             DataContext="{Binding Source={x:Static viewModel:ViewModelLocator.BacklogItemsViewModel}}">
+    <Grid>
+        <ig:XamTreeGrid AutoFit="True" DataSource="{Binding Tasks}">
+            <ig:XamTreeGrid.FieldSettings>
+                <ig:FieldSettings AllowEdit="True" IsAutoEditModeEnabled="True" CellClickAction="SelectCell" />
+            </ig:XamTreeGrid.FieldSettings>
+            <ig:XamTreeGrid.FieldLayouts>
+                <ig:FieldLayout>
+                    <ig:FieldLayout.Fields>
+                        <ig:TextField  Name="Name" 
+                                       Label="名称"/>
+                        <ig:NumericField Name="EstimatedManHour" 
+                                         Label="初期見積"
+                                         SpinButtonDisplayMode="OnlyInEditMode"
+                                         SpinIncrement="1"/>
+                    </ig:FieldLayout.Fields>
+                </ig:FieldLayout>
+            </ig:XamTreeGrid.FieldLayouts>
+        </ig:XamTreeGrid>
+    </Grid>
+</UserControl>

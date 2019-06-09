@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="View\BacklogItems.xaml" />
+    <None Remove="View\GanttChart.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Infragistics.WPF.DataGrids" Version="19.1.84" />
+    <PackageReference Include="Infragistics.WPF.DockManager" Version="19.1.84" />
+    <PackageReference Include="Infragistics.WPF.Gantt" Version="19.1.84" />
+    <PackageReference Include="Infragistics.WPF.Themes.RoyalDark" Version="19.1.84" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.0.1" />
+    <PackageReference Include="ReactiveProperty" Version="5.5.1" />
+    <PackageReference Include="SimpleInjector" Version="4.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lightningfall.Infrastructure\Lightningfall.Infrastructure.csproj" />
+    <ProjectReference Include="..\Lightningfall.UseCase\Lightningfall.UseCase.csproj" />
+    <ProjectReference Include="..\Lightningfall\Lightningfall.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="View\BacklogItems.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+</Project>
