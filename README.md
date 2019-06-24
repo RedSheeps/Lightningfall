@@ -41,7 +41,7 @@ Lightningfallは次の特徴をもったプロジェクト管理アプリケー�
 
 * WPF
     * MaterialDesignInXamlToolkit
-    * Syncfusion WPF Controls or Infragistics WPF or ...
+    * Infragistics WPF or Syncfusion WPF Controls or ...
 * Web APIを用いたWeb3層モデル
 * 複数のRDBサポート（SQL ServerとSQLiteくらいか？）
 * Presentasion層以外の十分な自動テスト
