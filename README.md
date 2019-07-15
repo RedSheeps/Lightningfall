@@ -17,8 +17,8 @@ Lightningfallは次の特徴をもったプロジェクト管理アプリケー�
 このプロジェクトでは次のような特徴をもったプロジェクト管理アプリケーションの開発を目指します。
 
 * 中長期的な管理をガントチャートで、短期（スプリント）的な管理をバーンダウンチャートで行う
-* 中長期的な管理はWEBとガントチャートで管理し、タスクの依存関係を含めて管理する
-* 短期（スプリント）的な管理はWEBとバーンダウンチャートを用いて管理し、タスクの依存関係は管理しない
+* 中長期的な管理はWBSとガントチャートで管理し、タスクの依存関係を含めて管理する
+* 短期（スプリント）的な管理はWBSとバーンダウンチャートを用いて管理し、タスクの依存関係は管理しない
 * チャートを用いたグラフィカルなダッシュボード
 * Microsoft ProjectとのImport/Export
 
@@ -41,7 +41,7 @@ Lightningfallは次の特徴をもったプロジェクト管理アプリケー�
 
 * WPF
     * MaterialDesignInXamlToolkit
-    * Syncfusion WPF Controls or Infragistics WPF or ...
+    * Infragistics WPF or Syncfusion WPF Controls or ...
 * Web APIを用いたWeb3層モデル
 * 複数のRDBサポート（SQL ServerとSQLiteくらいか？）
 * Presentasion層以外の十分な自動テスト
