@@ -1,0 +1,229 @@
+﻿<#@ assembly name="System.Core" #>
+<#@ assembly name="Microsoft.VisualStudio.Shell.Interop.8.0" #>
+<#@ assembly Name="EnvDTE" #>
+<#@ assembly name="VSLangProj" #>
+<#@ assembly name="System.Reflection" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="Microsoft.VisualStudio.Shell.Interop" #>
+using System.Windows;
+using System.Windows.Input;
+namespace <#= Namespace #> {
+
+<# 
+	var attachedPropertyTypes = GetAttachedPropertyTypes();
+
+    foreach (var attachedPropertyType in attachedPropertyTypes.OrderBy(x => x.DestinationType.FullName))
+    {
+#>
+	#region <#= attachedPropertyType.DestinationType #>
+	public static partial class <#= attachedPropertyType.DestinationType.Name #><#= ClassSuffix #> {
+<# 
+        foreach (var attachedProperty in attachedPropertyType.AttachedProperties.OrderBy(x => x.EventName))
+        {
+#>
+
+        public static readonly DependencyProperty <#= attachedProperty.Name #> =
+            DependencyProperty.RegisterAttached("<#= attachedProperty.EventName #>", typeof(ICommand), typeof(<#= attachedPropertyType.DestinationType #>), new FrameworkPropertyMetadata(<#= attachedProperty.OnChangedName #>));
+        
+        public static ICommand <#= attachedProperty.GetMethodName #>(DependencyObject target)
+        {
+            return (ICommand)target.GetValue(<#= attachedProperty.Name #>);
+        }
+        
+        public static void <#= attachedProperty.SetMethodName #>(DependencyObject target, ICommand value)
+        {
+            target.SetValue(<#= attachedProperty.Name #>, value);
+        }
+        
+        private static void <#= attachedProperty.OnChangedName #>(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is <#= attachedPropertyType.DestinationType #> target)
+            {
+                if (e.OldValue != null)
+                {
+                    target.<#= attachedProperty.EventName #> -= <#= attachedProperty.OnEventName #>;
+                }
+                if (e.NewValue != null)
+                {
+                    target.<#= attachedProperty.EventName #> += <#= attachedProperty.OnEventName #>;
+                }
+            }
+        }
+        
+        private static void <#= attachedProperty.OnEventName #>(object o, <#= attachedProperty.EventArgs #> eventArgs)
+        {
+			var commandParameter = eventArgs<#= attachedProperty.EventPropertyPath #>;
+            var command = <#= attachedProperty.GetMethodName #>((DependencyObject)o);
+            if (command.CanExecute(commandParameter))
+                command.Execute(commandParameter);
+        }
+<#
+        }
+#>
+	}
+	#endregion
+<#	 
+    }
+#>
+}
+<#+
+string Namespace;
+string ClassSuffix;
+List<InteractiveEvent> Events = new List<InteractiveEvent>();
+
+IEnumerable<AttachedPropertyType> GetAttachedPropertyTypes()
+{
+	var assemblies = LoadAssemblies();
+	var typeNames = Events.Select(x => x.TypeName).Distinct();
+	var attachedPropertyTypes =
+		typeNames
+			.Select(typeName => 
+				assemblies
+					.Select(assembly => assembly.GetType(typeName))
+					.Single(type => type != null))
+			.Select(type => new AttachedPropertyType(type))
+			.ToList();
+    foreach (var attachedPropertyType in attachedPropertyTypes)
+    {
+        foreach (var interactiveEvent in 
+			Events.Where(x => x.TypeName == attachedPropertyType.DestinationType.FullName))
+        {
+			attachedPropertyType.AddAttachedProperty(
+					new AttachedProperty(
+						attachedPropertyType.DestinationType, 
+						interactiveEvent.EventName,
+						interactiveEvent.EventParameterPath));
+        }
+    }
+	return attachedPropertyTypes;
+}
+
+List<Assembly> LoadAssemblies()
+{
+    var dte = ((DTE)((IServiceProvider)Host).GetService(typeof(SDTE)));
+	var templateItem = dte.Solution.FindProjectItem(this.Host.TemplateFile);
+	var project = templateItem.ContainingProject;
+	var vsProject = project.Object as VSLangProj.VSProject;
+	var references = new List<VSLangProj.Reference>();
+	var assemblies = new List<Assembly>();
+	foreach(var referenceObj in vsProject.References)
+	{
+		var reference = (VSLangProj.Reference)referenceObj;
+		try
+		{
+			assemblies.Add(Assembly.LoadFile(reference.Path));
+			references.Add(reference);
+		}
+		catch
+		{
+			Debug.WriteLine(string.Format("Cannot load assembly. Assenbly name is {0}.", reference.Path));
+		}
+	}
+	return assemblies;
+}
+
+public class InteractiveEvent
+{
+	public InteractiveEvent(string typeName, string eventName) : this(typeName, eventName, string.Empty)
+    {
+    }
+
+	public InteractiveEvent(string typeName, string eventName, string eventParameterPath)
+    {
+		TypeName = typeName;
+		EventName = eventName;
+		EventParameterPath = eventParameterPath;
+    }
+
+	public string TypeName { get; }
+	public string EventName { get; }
+	public string EventParameterPath { get; }
+}
+
+public class AttachedPropertyType
+{
+	private readonly IList<AttachedProperty> _attachedProperties = new List<AttachedProperty>();
+
+	public AttachedPropertyType(Type type)
+    {
+		DestinationType = type;
+    }
+
+	public Type DestinationType { get; }
+
+	public IEnumerable<AttachedProperty> AttachedProperties
+    {
+		get { return _attachedProperties; }
+    }
+
+	public void AddAttachedProperty(AttachedProperty attachedProperty)
+    {
+		_attachedProperties.Add(attachedProperty);
+    }
+}
+
+public class AttachedProperty
+{
+	public AttachedProperty(Type type, string eventName, string eventPropertyPath)
+    {
+		EventName = eventName;
+		if (string.IsNullOrEmpty(eventPropertyPath))
+        {
+			Name = string.Format("{0}Property", eventName);
+			GetMethodName = string.Format("Get{0}", eventName);
+			SetMethodName = string.Format("Set{0}", eventName);
+			OnChangedName = string.Format("On{0}Changed", eventName);
+			OnEventName = string.Format("On{0}", eventName);
+
+			var eventInfo = type.GetEvent(eventName);
+			var eventHandlerType = eventInfo.EventHandlerType;
+			var eventArgsType =
+				eventHandlerType.IsGenericType
+					? eventHandlerType.GenericTypeArguments.First()
+					: eventHandlerType.GetMethod("Invoke").GetParameters()[1].ParameterType;
+			EventArgs = eventArgsType.FullName;
+			EventPropertyPath = string.Empty;
+        }
+		else
+        {
+			var propertyNames = eventPropertyPath.Replace(".", string.Empty);
+			Name = string.Format("{0}Notify{1}Property", eventName, propertyNames);
+			GetMethodName = string.Format("Get{0}Notify{1}", eventName, propertyNames);
+			SetMethodName = string.Format("Set{0}Notify{1}", eventName, propertyNames);
+			OnChangedName = string.Format("On{0}Notify{1}Changed", eventName, propertyNames);
+			OnEventName = string.Format("On{0}Notify{1}", eventName, propertyNames);
+
+			var eventInfo = type.GetEvent(eventName);
+			var eventHandlerType = eventInfo.EventHandlerType;
+			var eventArgsType =
+				eventHandlerType.IsGenericType
+					? eventHandlerType.GenericTypeArguments.First()
+					: eventHandlerType.GetMethod("Invoke").GetParameters()[1].ParameterType;
+			EventArgs = eventArgsType.FullName;
+			EventPropertyPath = "." + eventPropertyPath;
+        }
+    }
+
+	public string EventName { get; }
+
+	public string EventArgs { get; }
+
+	public string Name { get; }
+
+	public string GetMethodName { get; }
+
+	public string SetMethodName { get; }
+
+	public string OnChangedName { get; }
+
+	public string OnEventName { get; }
+
+	public string EventPropertyPath { get; }
+}
+#>

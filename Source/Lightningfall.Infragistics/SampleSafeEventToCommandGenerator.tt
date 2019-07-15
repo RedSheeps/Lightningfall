@@ -1,0 +1,11 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<# 
+    Namespace = "RedSheeps.Wpf.Interactivity";
+	ClassSuffix = "Behavior";
+
+	Events.Add(new InteractiveEvent("Infragistics.Controls.Schedules.XamGantt", "DragEnter"));
+	Events.Add(new InteractiveEvent("Infragistics.Controls.Schedules.XamGantt", "CellChanged"));
+	Events.Add(new InteractiveEvent("Infragistics.Controls.Schedules.XamGantt", "CellChanged", "Cell"));
+	Events.Add(new InteractiveEvent("Infragistics.Controls.Schedules.XamGantt", "CellChanged", "Cell.Column"));
+#>
+<#@ include file="GenericSafeEventToCommandGenerator.tt" #>

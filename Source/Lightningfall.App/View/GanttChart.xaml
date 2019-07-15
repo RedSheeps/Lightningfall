@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Lightningfall.App.View"
              xmlns:viewModel="clr-namespace:Lightningfall.App.ViewModel"
              xmlns:ig="http://schemas.infragistics.com/xaml"
+             xmlns:eventToCommand="clr-namespace:Lightningfall.App.View.EventToCommand"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              DataContext="{Binding Source={x:Static viewModel:ViewModelLocator.GanttChartViewModel}}">

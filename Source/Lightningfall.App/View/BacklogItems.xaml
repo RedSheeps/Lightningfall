@@ -12,6 +12,9 @@
              DataContext="{Binding Source={x:Static viewModel:ViewModelLocator.BacklogItemsViewModel}}">
     <Grid>
         <ig:XamTreeGrid AutoFit="True" DataSource="{Binding Tasks}">
+            <ig:XamTreeGrid.FieldLayoutSettings>
+                <ig:FieldLayoutSettings AutoGenerateFields="True" />
+            </ig:XamTreeGrid.FieldLayoutSettings>
             <ig:XamTreeGrid.FieldSettings>
                 <ig:FieldSettings AllowEdit="True" IsAutoEditModeEnabled="True" CellClickAction="SelectCell" />
             </ig:XamTreeGrid.FieldSettings>
@@ -20,10 +23,6 @@
                     <ig:FieldLayout.Fields>
                         <ig:TextField  Name="Name" 
                                        Label="名称"/>
-                        <ig:NumericField Name="EstimatedManHour" 
-                                         Label="初期見積"
-                                         SpinButtonDisplayMode="OnlyInEditMode"
-                                         SpinIncrement="1"/>
                     </ig:FieldLayout.Fields>
                 </ig:FieldLayout>
             </ig:XamTreeGrid.FieldLayouts>

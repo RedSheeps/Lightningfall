@@ -7,13 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lightningfall", "Lightningf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lightningfall.App", "Lightningfall.App\Lightningfall.App.csproj", "{35EF87F1-48F3-48FE-8751-EBE02DD15219}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lightningfall.Infrastructure", "Lightningfall.Infrastructure\Lightningfall.Infrastructure.csproj", "{63703FC7-267D-4056-A45F-3150FB12C51C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lightningfall.Infrastructure", "Lightningfall.Infrastructure\Lightningfall.Infrastructure.csproj", "{63703FC7-267D-4056-A45F-3150FB12C51C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lightningfall", "Lightningfall", "{BBD16135-26ED-47D5-B119-7CC3438C5613}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lightningfall.UseCase", "Lightningfall.UseCase", "{F7EAF94D-CF24-474F-827C-04D57E3FE5C5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lightningfall.UseCase", "Lightningfall.UseCase\Lightningfall.UseCase.csproj", "{BAD99BE2-7254-45DC-B69D-9966E94C8AC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lightningfall.Infragistics", "Lightningfall.Infragistics\Lightningfall.Infragistics.csproj", "{88947C2D-EF9D-4A3A-A664-90BB9771894E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,10 @@ Global
 		{BAD99BE2-7254-45DC-B69D-9966E94C8AC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAD99BE2-7254-45DC-B69D-9966E94C8AC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAD99BE2-7254-45DC-B69D-9966E94C8AC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88947C2D-EF9D-4A3A-A664-90BB9771894E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88947C2D-EF9D-4A3A-A664-90BB9771894E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88947C2D-EF9D-4A3A-A664-90BB9771894E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88947C2D-EF9D-4A3A-A664-90BB9771894E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
